@@ -29,9 +29,9 @@
 			}
 		});
 		
-		function add(list){
+		function add(jobList){
 			$("#combo").empty();
-			$.each(list, function(){
+			$.each(jobList, function(){
 				var option = $("<option></option>").html(this);
 				option.attr("value",this);
 				$("#combo").append(option);				

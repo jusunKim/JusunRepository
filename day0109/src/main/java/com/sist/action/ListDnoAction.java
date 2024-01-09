@@ -7,24 +7,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import com.sist.dao.EmpDAO;
-import com.sist.vo.EmpVO;
 
-public class ListEmpAction implements SistAction {
+public class ListDnoAction implements SistAction {
 
 	@Override
 	public String pro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String viewPage = "listEmp.jsp";
+		String viewPage = "listDno.jsp";
 		EmpDAO dao = EmpDAO.getInstance();
-		String search = null;
-		String category = null;
-		if(request.getParameter("search")!=null) {
-			search = request.getParameter("search");
-			category = request.getParameter("category");
-		}
-		System.out.println(category+" "+search);
-		ArrayList<EmpVO> list = dao.listEmp(category, search);
-		request.setAttribute("list", list);
+		ArrayList<Integer> list = dao.listDno();
+		Gson gson = new Gson();
+		String data = gson.toJson(list);
+		request.setAttribute("data",data ); 
 		return viewPage;
 	}
 
