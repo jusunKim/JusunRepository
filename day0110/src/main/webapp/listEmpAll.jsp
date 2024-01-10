@@ -13,6 +13,7 @@
   	$(function(){
   		var deptList;
   		var mgrList;
+  		var jobList;
   		$.ajax("listDname.do",{
   			success:function(arr){
   				deptList = arr;
@@ -23,6 +24,13 @@
   			url:"listManager.do",
   			success:function(arr){
   				mgrList = arr;
+  			}
+  		});
+  		
+  		$.ajax({
+  			url:"listJob.do",
+  			success:function(r){
+  				jobList = r;
   			}
   		});
   		
@@ -38,15 +46,16 @@
   		$("#category").change(function(){
   			var v = $(this).val();
   			console.log(v);
-  			if(v=="d.dname" || v=="m.ename"){
+  			if(v=="d.dname" || v=="m.ename" || v=="e.job"){
   				$("#combo").css("display","inline-block");
   				$("#search").css("display","none");
   				$("#combo").attr("name","search");
   				$("#search").attr("name",null);
-  				if(v=="d.dname"){
-  					addToCombo(deptList);
-  				}else{
-  					addToCombo(mgrList);
+  				
+  				switch(v){
+	  				case "d.dname": addToCombo(deptList); break;
+	  				case "m.ename": addToCombo(mgrList); break;
+	  				case "e.job": addToCombo(jobList); break;
   				}
   			}else{
   				$("#combo").css("display","none");
@@ -74,6 +83,7 @@
 		<option value="e.ename">사원명</option>
 		<option value="d.dname">부서명</option>
 		<option value="m.ename">관리자명</option>
+		<option value="e.job">직책</option>
 	</select>&nbsp;
 	<input type="search" id="search" name="search">&nbsp;
 	<select id="combo">

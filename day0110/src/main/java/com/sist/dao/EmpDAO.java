@@ -23,6 +23,7 @@ public class EmpDAO {
 	}
 	
 	
+
 	
 	public ArrayList<String> findAllManager(){
 		ArrayList<String> list = new ArrayList<String>();
@@ -61,13 +62,12 @@ public class EmpDAO {
 	
 	public ArrayList<HashMap<String, Object>> findAllEmp(String category, String search) {
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
-		String sql = "select e.eno, e.ename, d.dno, d.dname,  e.salary, nvl(e.comm,0) , e.salary+nvl(e.comm,0) , e.hiredate,"
+		String sql = "select e.eno, e.ename, e.dno, d.dname,  e.salary, nvl(e.comm,0) , e.salary+nvl(e.comm,0) , e.hiredate,"
 				+ " floor(months_between(sysdate, e.hiredate)),m.ename, rpad(substr(e.jumin,1,8),14,'*') , e.email, e.job"
-				+ " from emp e, emp m, dept d"
-				+ " where e.mgr=m.eno"
-				+ " and e.dno = d.dno";
+				+" from emp e left join emp m on e.mgr=m.eno"
+				+ " left join dept d on e.dno = d.dno";
 				if(search!=null && !search.equals("")) {
-					sql+= " and "+category+" ='"+search+"'";
+					sql+= " where "+category+" ='"+search+"'";
 				}
 				sql += " order by e.eno";
 		
