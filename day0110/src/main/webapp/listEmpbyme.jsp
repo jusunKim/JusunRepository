@@ -16,7 +16,7 @@
 	$(function(){
 		$.ajax("listJob.do",{
 			success:function(arr){
-				jobList =arr;
+				jobList =arr;  
 				//addJob(jobList);
 				
 			}

@@ -15,12 +15,17 @@ public class ListEmpAllAction implements SistAction {
 		EmpDAO dao = EmpDAO.getInstance();
 		String search = null;
 		String category = null;
+		String op = null;
 		if(request.getParameter("search")!=null) {
 			search=request.getParameter("search");
 			category = request.getParameter("category");
+			if(category.equals("e.hiredate")) {
+				op=request.getParameter("op");
+			}
 		}
-		request.setAttribute("list", dao.findAllEmp(category, search));
-		System.out.println(category+" "+search);
+		
+		request.setAttribute("list", dao.findAllEmp(op,category, search));
+		System.out.println(category+" "+op+" "+search);
 		return "listEmpAll.jsp";
 	}
 

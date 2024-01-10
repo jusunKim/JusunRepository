@@ -8,17 +8,17 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
 $(function(){
-	$("#btnReadSession").on("click", function(){
-		
-	});
 	$("#btnSaveSession").on("click", function(){
-		sessionStorage.setItem("session",$("#input_session").val());
-	});
-	$("#btnReadLocal").on("click", function(){
-		
+		sessionStorage.setItem("name",$("#input_session").val());
 	});
 	$("#btnSaveLocal").on("click", function(){
-		localStorage.setItem("session",$("#input_session").val());		
+		localStorage.setItem("name",$("#input_local").val());		
+	});
+	$("#btnReadSession").on("click", function(){
+		$("#output_session").html(sessionStorage.getItem("name"));
+	});
+	$("#btnReadLocal").on("click", function(){
+		$("#output_local").html(localStorage.getItem("name"));		
 	});
 });
 </script>

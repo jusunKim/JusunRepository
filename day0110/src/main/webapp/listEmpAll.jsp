@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +12,14 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script type="text/javascript">
   	$(function(){
-  		var deptList;
+  		var deptList;  
   		var mgrList;
   		var jobList;
   		$.ajax("listDname.do",{
   			success:function(arr){
   				deptList = arr;
-  			}
-  		});
+  			} 
+  		}); 
   		
   		$.ajax({
   			url:"listManager.do",
@@ -45,12 +46,13 @@
   		
   		$("#category").change(function(){
   			var v = $(this).val();
-  			console.log(v);
+  			
+  			
   			if(v=="d.dname" || v=="m.ename" || v=="e.job"){
+  				$(".keyword").css("display","none");
   				$("#combo").css("display","inline-block");
-  				$("#search").css("display","none");
+  				$(".keyword").attr("name",null);
   				$("#combo").attr("name","search");
-  				$("#search").attr("name",null);
   				
   				switch(v){
 	  				case "d.dname": addToCombo(deptList); break;
@@ -58,16 +60,32 @@
 	  				case "e.job": addToCombo(jobList); break;
   				}
   			}else{
-  				$("#combo").css("display","none");
+  				$(".keyword").css("display","none");
   				$("#search").css("display","inline-block");
-  				$("#combo").attr("name",null);
+  				$(".keyword").attr("name",null);
   				$("#search").attr("name","search");
   			}
+  			
+  			if(v=="e.hiredate"){
+  				$("#op").css("display","inline-block");
+  				$(".keyword").css("display","none");
+  				$("#date_keyword").css("display","inline-block");
+  				
+  				$(".keyword").attr("name",null);
+  				$("#date_keyword").attr("name","search");
+  			}else{
+  				$("#op").css("display","none");
+  				$("#date_keyword").css("display","none");
+  				
+  				
+  				
+  			}
+
   		});
   	});
   </script>
   <style type="text/css">
-  	#combo{
+  	#combo,#op, #date_keyword{
   			display:none
   		}
   </style>
@@ -84,10 +102,18 @@
 		<option value="d.dname">부서명</option>
 		<option value="m.ename">관리자명</option>
 		<option value="e.job">직책</option>
+		<option value="e.hiredate">입사일</option>
 	</select>&nbsp;
-	<input type="search" id="search" name="search">&nbsp;
-	<select id="combo">
+	<select id="op" name="op">
+		<option value=">">></option>
+		<option value=">=">>=</option>
+		<option value="<"><</option>
+		<option value="<="><=</option>
+		<option value="=">=</option>
 	</select>
+	<input type="search" id="search" name="search" class="keyword">&nbsp;
+	<select id="combo" class="keyword"></select>
+	<input type="date" id="date_keyword" class="keyword">
 	<input type="submit" value="검색">
 </form>
 <hr>
@@ -119,10 +145,12 @@
 			<td>${e.salary }</td>
 			<td>${e.comm }</td>
 			<td>${e.income }</td>
-			<td>${e.hiredate }</td>
+			<td>
+				<fmt:formatDate value="${e.hiredate }" pattern="yyyy-MM"></fmt:formatDate>
+			</td>
 			<td>${e.workmonth }</td>
 			<td>${e.mname }</td>
-			<td>${e.jumin }</td>
+			<td>${e.jumin }</td> 
 			<td>${e.email }</td>
 			<td>${e.job }</td>
 		</tr>

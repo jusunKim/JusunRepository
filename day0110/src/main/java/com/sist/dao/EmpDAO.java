@@ -60,17 +60,21 @@ public class EmpDAO {
 		return list;
 	}
 	
-	public ArrayList<HashMap<String, Object>> findAllEmp(String category, String search) {
+	public ArrayList<HashMap<String, Object>> findAllEmp(String op, String category, String search) {
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
 		String sql = "select e.eno, e.ename, e.dno, d.dname,  e.salary, nvl(e.comm,0) , e.salary+nvl(e.comm,0) , e.hiredate,"
 				+ " floor(months_between(sysdate, e.hiredate)),m.ename, rpad(substr(e.jumin,1,8),14,'*') , e.email, e.job"
 				+" from emp e left join emp m on e.mgr=m.eno"
 				+ " left join dept d on e.dno = d.dno";
 				if(search!=null && !search.equals("")) {
-					sql+= " where "+category+" ='"+search+"'";
+					if(category.equals("e.hiredate")) {
+						sql+= " where e.hiredate "+op+"'"+search+"'";
+					}else {
+						sql+= " where "+category+" ='"+search+"'";						
+					}
 				}
 				sql += " order by e.eno";
-		
+		System.out.println(sql);
 		try {
 			Connection conn = ConnectionProvider.getConnection();
 			Statement stmt = conn.createStatement();
