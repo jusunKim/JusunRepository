@@ -12,9 +12,13 @@
 <table border="1">
 	<c:forEach var="v" items="${ list}">
 	<tr>
-		<td>${v.q_title }</td>
-		<td>${v.q_content }</td>
-		<td>${v.q_date }</td>
+		<td>${v.imgno }</td>
+		<td>${v.img1}</td>
+		<td>${v.img2 }</td>
+		<td>${v.img3 }</td>
+		<td>${v.img4 }</td>
+		<td>${v.img5}</td>
+		<td>${v.pno}</td>
 	</tr>
 	</c:forEach>
 </table>
