@@ -342,4 +342,55 @@ public class ProductDAO {
       }
       return no;
    }
+   
+   //주소 넣으면 a_code반환하는 메소드. product에 insert할 때 a_code 노가다로 찾지 말고 메소드 불러와서 넣으면 될듯
+   public int getACode(String addr) {
+	   int re = 0;
+	   String keyword = null;
+	   if(addr.indexOf("제주시")!=-1) {
+		   if(addr.indexOf("한경면")!=-1) {
+			   keyword = "한경면";
+		   }else if(addr.indexOf("한림읍")!=-1) {
+			   keyword = "한림읍";
+		   }else if(addr.indexOf("애월읍")!=-1) {
+			   keyword = "애월읍";
+		   }else if(addr.indexOf("조천읍")!=-1) {
+			   keyword = "조천읍";
+		   }else if(addr.indexOf("구좌읍")!=-1) {
+			   keyword = "구좌읍";
+		   }else {
+			   keyword= "제주시";
+		   }
+	   }else {
+		   if(addr.indexOf("대정읍")!=-1) {
+			   keyword = "대정읍";
+		   }else if(addr.indexOf("안덕면")!=-1) {
+			   keyword = "안덕면";
+		   }else if(addr.indexOf("중문")!=-1) {
+			   keyword = "중문";
+		   }else if(addr.indexOf("남원읍")!=-1) {
+			   keyword = "남원읍";
+		   }else if(addr.indexOf("표선면")!=-1) {
+			   keyword = "표선면";
+		   }else if(addr.indexOf("성산읍")!=-1) {
+			   keyword = "성산읍";
+		   }else {
+			   keyword= "서귀포시";
+		   }
+	   }
+	   String sql = "select a_code from local where local = '"+keyword+"' ";
+	     try {
+	         Connection conn = ConnectionProvider.getConnection();
+	         Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(sql);
+	         if(rs.next()) {
+	            re = rs.getInt(1);
+	         }
+	         ConnectionProvider.close(conn, stmt, rs);
+	      } catch (Exception e) {
+	         System.out.println("예외발생 : " + e.getMessage());
+	      }
+	   
+	   return re;
+   }
 }
