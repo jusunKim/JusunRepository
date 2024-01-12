@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fa8699608123bb81a55935414cdb2b89"></script>
+<style>
+	
+	.mouseon{
+		background-color: pink;
+	}
+	.mclick{
+		background-color: skyblue;
+	}
+	.item{
+		list-style: none;
+	}
+	
+	#lst{
+		float: left;
+		width: 350px;
+	}
+	
+	#map{
+		border: 1px solid black;
+	}
+
+</style>
+<script>
+	$(function(){
+		$.ajax({
+			url:"전국자전거대여소표준데이터.json",
+			success:function(data){
+				var arr = data.records;
+				$.each(arr,function(){
+					var name = this.자전거대여소명;
+					var loc = this.소재지지번주소
+					if(loc.indexOf("서울")!=-1){
+						var li = $("<li></li>").html(name);
+						$(li).attr("lat",this.위도);
+						$(li).attr("long",this.경도);
+						$(li).addClass("item");
+						$("#list").append(li);
+					}
+				});
+				
+			}
+		});
+		
+		function showMap(lat, long){
+			position = new kakao.maps.LatLng(lat, long);
+			
+			var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+   			 mapOption = { 
+			        center: position, // 지도의 중심좌표
+			        level: 3 // 지도의 확대 레벨
+   				 };
+
+			// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+			var map = new kakao.maps.Map(mapContainer, mapOption); 
+					
+			
+			// 마커를 생성합니다
+			var marker = new kakao.maps.Marker({
+			    position: position
+			});
+			
+			// 마커가 지도 위에 표시되도록 설정합니다
+			marker.setMap(map);
+		}
+		showMap(37.55655, 126.9196);
+		
+		
+		$(document).on("mouseenter","li",function(){
+			$(this).addClass("mouseon");
+		}).on("mouseleave","li",function(){
+			$(this).removeClass("mouseon");
+		}).on("click","li",function(){
+			$("li").removeClass("mclick");
+			$(this).addClass("mclick");
+			var lat = $(this).attr("lat")
+			var long = $(this).attr("long")
+			showMap(lat,long);
+			
+		})
+		
+		
+					
+	});
+</script>
+</head>
+<body>
+	<div id="lst">
+		<ul id="list"></ul>
+	</div>
+	<div id="map" style="width:350px;height:500px;"></div>
+</body>
+</html>

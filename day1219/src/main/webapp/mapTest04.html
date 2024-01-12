@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>지도 생성하기</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fa8699608123bb81a55935414cdb2b89"></script>
+	<script>
+		
+		$(function(){
+			var position = new kakao.maps.LatLng(37.55655, 126.9196);
+			var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	   			 mapOption = { 
+				        center: position, // 지도의 중심좌표
+				        level: 3 // 지도의 확대 레벨
+	   			};
+				// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+				var map = new kakao.maps.Map(mapContainer, mapOption); 
+				// 마커를 생성합니다
+				var marker = new kakao.maps.Marker({
+				    position: position
+				});
+				// 마커가 지도 위에 표시되도록 설정합니다
+				marker.setMap(map);
+			$("#btnS").click(function(){
+				 // 이동할 위도 경도 위치를 생성합니다 
+			    var moveLatLon = new kakao.maps.LatLng(37.566764,126.987542);
+			    
+			    // 지도 중심을 이동 시킵니다
+			    map.panTo(moveLatLon);
+			})		
+			$("#btnJ").click(function(){
+				
+				 // 이동할 위도 경도 위치를 생성합니다 
+			    var moveLatLon = new kakao.maps.LatLng(33.36184, 126.5290);
+			    
+			    // 지도 중심을 이동 시킵니다
+			    map.panTo(moveLatLon);
+			})		
+			$("#btnM").click(function(){
+				
+				 // 이동할 위도 경도 위치를 생성합니다 
+			    var moveLatLon = new kakao.maps.LatLng(37.55611, 126.9102);
+			    
+			    // 지도 중심을 이동 시킵니다
+			    map.setCenter(moveLatLon);
+			})		
+			$("#btnM1").click(function(){
+				
+				 // 이동할 위도 경도 위치를 생성합니다 
+			    var moveLatLon = new kakao.maps.LatLng(37.55611, 126.9102);
+			    
+			    // 지도 중심을 이동 시킵니다
+			    map.panTo(moveLatLon);
+			})		
+			//인접한 거리여야 panTo가 잘 부드럽게 이동 먹음
+		});
+		
+		
+				
+	</script>
+</head>
+<body>
+<!-- 지도를 표시할 div 입니다 -->
+<div id="map" style="width:80%;height:350px;"></div>
+<hr>
+<button id="btnM">망원역</button>
+<button id="btnM1">망원역부들</button>
+<button id="btnS">서울시청</button>
+<button id="btnJ">제주 한라산</button>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+	$(function(){
+		
+		setInterval(function(){//1초마다 갱신하려고
+			$.ajax({
+				url:"listChat.jsp", //싹다출력하는거
+				success:function(r){ //통신 성공하면 가져오는 데이터가 r
+					$("#output").empty(); //일단 비워야 더해주니까 비워
+					$.each(r, function(){//통신 성공하면 가져오는 데이터(현재는 배열임)를 가지고 하나하나 뭘 할 거임
+						var h3 = $("<h3></h3>").html(this.name); //객체하나의 이름 갖다가 h3에 넣기
+						var p = $("<p></p>").html(this.msg);
+						var one = $("<div></div>").append(h3,p);
+						$("#output").append(one);
+					});
+				}
+			})
+		},1000);
+		
+		$("#btnSEND").on("click",function(){ //버튼 클릭하면 일어나는 일
+			var chat= $("#my_form").serializeArray(); //폼 안의 내용을 전부 모아서 객체로 만들어줌. textarea도 됨
+			
+			$.ajax({
+				url:"addChat.jsp",
+				data: chat, //ajax통신에서 정보 전달
+				success: function(r){
+					console.log(r.msg); //확인용
+					$(".input").val("");
+				}
+			})
+		});
+	});
+</script>
+</head>
+<body>
+	<form id="my_form">
+		<table>
+			<tr>
+				<td>닉네임</td>
+				<td><input class="input" type="text" id="name" name="name"></td>
+			</tr>
+			<tr>
+				<td>메시지</td>
+				<td><textarea class="input" rows="3" cols="60" id="msg" name="msg"></textarea></td>
+			</tr>
+			
+		</table>
+	</form>
+	<button id="btnSEND">글쓰기</button>
+	<hr>
+	
+	<div id="output"></div>
+</body>
+</html>

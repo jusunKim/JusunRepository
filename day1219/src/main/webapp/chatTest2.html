@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+	$(function(){
+		
+		setInterval(function(){
+			$.ajax({
+				url:"listChat.jsp",
+				success:function(r){
+					$("#output").empty();
+					$.each(r, function(){
+						var one = $("<div></div>").html("<b>"+this.name+"</b> ==>"+this.msg);
+						$("#output").append(one);
+					});
+				}
+			})
+		},1000);
+		
+		$("#btnSEND").on("click",function(){
+			var chat= $("#my_form").serializeArray();
+			
+			$.ajax({
+				url:"addChat.jsp",
+				data: chat,
+				success: function(r){
+					console.log(r.msg);
+					$(".input").val("");
+				}
+			})
+		});
+	});
+</script>
+</head>
+<body>
+	<form id="my_form">
+		<table>
+			<tr>
+				<td>닉네임</td>
+				<td><input class="input" type="text" id="name" name="name"></td>
+			</tr>
+			<tr>
+				<td>메시지</td>
+				<td><textarea class="input" rows="3" cols="60" id="msg" name="msg"></textarea></td>
+			</tr>
+			
+		</table>
+	</form>
+	<button id="btnSEND">글쓰기</button>
+	<hr>
+	
+	<div id="output"></div>
+</body>
+</html>
