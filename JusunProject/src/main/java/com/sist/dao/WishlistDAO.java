@@ -26,14 +26,14 @@ public class WishlistDAO {
 	
 	//이하 메소드
 	
-	//<회원의 위시리스트 정보 가져오기>uno에 따라 : 이미지, 상품이름, 별점, 상품가격
-	//select w.uno, i.img1, p.pno, p_name, rating, price
+	//<회원의 위시리스트 정보 가져오기>uno에 따라 : 상품번호, 이미지, 상품이름, 별점, 상품가격
+	//select p.pno, i.img1, p_name, rating, price
 	//from wishlist w, product p, image i
 	//where w.pno=p.pno and p.pno=i.pno
 	//and w.uno=5;
 	public ArrayList<HashMap<String, Object>> listWishlist(int uno) {
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
-		String sql = "select i.img1, p.pno, p_name, rating, price "
+		String sql = "select p.pno, i.img1, p_name, rating, price "
 				+ "from wishlist w, product p, image i "
 				+ "where w.pno=p.pno and p.pno=i.pno "
 				+ "and w.uno="+uno;
@@ -43,8 +43,8 @@ public class WishlistDAO {
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()) {
 				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put("img1", rs.getString(1));			
-				map.put("pno", rs.getInt(2));
+				map.put("pno", rs.getInt(1));
+				map.put("img1", rs.getString(2));
 				map.put("p_name", rs.getString(3));
 				map.put("rating", rs.getInt(4));
 				map.put("price", rs.getInt(5));

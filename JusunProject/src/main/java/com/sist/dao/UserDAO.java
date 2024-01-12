@@ -139,13 +139,29 @@ public class UserDAO {
 		
 	}
 	
-	//<회원 정보 가져오기> uno가 0이면 전체목록 반환(관리자용), uno에 따라 특정 회원의 정보 가져옴(회원 마이페이지용)
-	public ArrayList<UserVO> listUserData(int uno) {
+	//<회원 내 정보 가져오기> uno에 따라 특정 회원의 정보 가져옴(회원 마이페이지용)
+	public ArrayList<UserVO> listMyData(int uno) {
+		ArrayList<UserVO> list = new ArrayList<UserVO>();
+		String sql = "select * from users where uno = "+uno;
+		try {
+			Connection conn =ConnectionProvider.getConnection();
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				list.add(new UserVO(rs.getInt(1), rs.getString(2), rs.getString(3), 
+						rs.getString(4), rs.getString(5), rs.getString(6)));
+			}
+			ConnectionProvider.close(conn, stmt, rs);
+		} catch (Exception e) {
+			System.out.println("예외:"+e.getMessage());
+		}
+		return list;
+	}
+	
+	//<회원 전체 정보 가져오기> 전체 회원 리스팅.(관리자용) - 추후 검색 기능 구체화에 따라 매개변수 생길 수 있을듯.
+	public ArrayList<UserVO> listAllUserData() {
 		ArrayList<UserVO> list = new ArrayList<UserVO>();
 		String sql = "select * from users";
-		if(uno!=0) {
-			sql+= " where uno ="+uno;
-		}
 		try {
 			Connection conn =ConnectionProvider.getConnection();
 			Statement stmt = conn.createStatement();

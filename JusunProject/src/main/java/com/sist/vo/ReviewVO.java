@@ -7,12 +7,10 @@ public class ReviewVO {
 	private String re_title;
 	private String re_content;
 	private Date re_date;
-	private int rating;
+	private double rating;
 	private int pno;
 	private int uno;
-	
-	
-	public ReviewVO(int reno, String re_title, String re_content, Date re_date, int rating, int pno, int uno) {
+	public ReviewVO(int reno, String re_title, String re_content, Date re_date, double rating, int pno, int uno) {
 		super();
 		this.reno = reno;
 		this.re_title = re_title;
@@ -22,14 +20,10 @@ public class ReviewVO {
 		this.pno = pno;
 		this.uno = uno;
 	}
-	
-	
 	public ReviewVO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-
 	public int getReno() {
 		return reno;
 	}
@@ -54,10 +48,10 @@ public class ReviewVO {
 	public void setRe_date(Date re_date) {
 		this.re_date = re_date;
 	}
-	public int getRating() {
+	public double getRating() {
 		return rating;
 	}
-	public void setRating(int rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 	public int getPno() {
