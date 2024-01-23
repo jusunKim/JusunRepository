@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,11 +25,11 @@ public class UpdateGoodsController {
 	@Autowired
 	GoodsDAO dao = new GoodsDAO();
 
-	@RequestMapping(method=RequestMethod.GET)
+	@GetMapping
 	public void form(int no, Model model) {
 		model.addAttribute("g",dao.findByNo(no));
 	}
-	@RequestMapping(method=RequestMethod.POST)
+	@PostMapping
 	public ModelAndView submit(GoodsVO g, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("redirect:/listGoods"); //String해도 됨
 		String path = request.getServletContext().getRealPath("images");
