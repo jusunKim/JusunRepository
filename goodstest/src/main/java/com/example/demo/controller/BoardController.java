@@ -20,6 +20,7 @@ public class BoardController {
 	@GetMapping("/listBoard")
 	public void listBoard(@RequestParam(value = "pageNo", defaultValue = "1") int pageNo, Model model) {
 		//페이지번호를 받아 근데 그 값이 없으면 1이야
+		
 		int totalRecord = dao.countTotalRecord();
 		int pageSize = 10;
 		int totalPage = (int)Math.ceil(totalRecord/(double)pageSize);

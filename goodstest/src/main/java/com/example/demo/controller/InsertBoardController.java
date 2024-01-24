@@ -24,11 +24,11 @@ public class InsertBoardController {
 	
 	@GetMapping
 	 public void insertBoard(String no, Model model) { //--> 매개변수로 받은 no는 request.getparameter와 동일한 역할이라서 int로 받지 못하기 때문에 String으로 일단 받는다.
-	      int bno=0;
+	      int bno=0; //부모글번호
 	      if(no != null && !no.equals("")) {
 	         bno = Integer.parseInt(no);
 	      }
-	      model.addAttribute("no",bno);
+	      model.addAttribute("no",bno); //부모글번호를 걍 no로 전달해버리네..
 	   }
 	
 	@PostMapping
@@ -38,12 +38,15 @@ public class InsertBoardController {
 		System.out.println(path);
 		String fname = null;
 		
+		//진짜 글번호로 들어가는 건 이거고.
 		int no = dao.getNextNo();
+		
+		//일단 새글이라고 보고 짜
 		int b_ref = no;
 		int b_level = 0;
 		int b_step = 0;
 		
-		int pno = b.getNo(); //걍 no로 가져오는구나...
+		int pno = b.getNo(); //글고 그걸 걍 VO에 있던 no로 가져오는구나...
 		if(pno!=0) {
 			BoardVO pb = dao.detailBoard(pno);
 			b_ref = pb.getB_ref();

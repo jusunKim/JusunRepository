@@ -10,7 +10,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.example.demo.vo.BoardVO;
+import com.example.demo.vo.EmpVO;
 import com.example.demo.vo.GoodsVO;
+import com.example.demo.vo.MemberVO;
 
 public class DBManager {
 	private static SqlSessionFactory factory;
@@ -23,6 +25,30 @@ public class DBManager {
 		}catch (Exception e) {
 			System.out.println("예외 발생:"+e.getMessage());
 		}
+	}
+	
+	public static EmpVO findByEno(int eno) {
+		EmpVO e = new EmpVO();
+		SqlSession session= factory.openSession();
+		e = session.selectOne("emp.findByEno",eno);
+		session.close();
+		return e;
+	}
+	
+	public static List<Integer> listEno() {
+		List<Integer> list;
+		SqlSession session = factory.openSession();
+		list = session.selectList("emp.listEno");
+		session.close();
+		return list;
+	}
+	
+	public static int joinMember(MemberVO m) {
+		int re = -1;
+		SqlSession session = factory.openSession(true);
+		re = session.insert("member.joinMember",m);
+		session.close();
+		return re;
 	}
 	
 	public static int countTotalRecord() {
