@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.item{
+		list-style: none;
+	}
+	.hovered{
+		background-color: yellow;
+	}
+	.mclicked{
+		background-color: pink;
+	}
+	
+	#list,#info{
+		float: left;
+		margin: 30px;
+	}
+	#info{
+		visibility: hidden;
+	}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+	$(function(){
+		var arr;
+		$.ajax({
+			url:"listDeptJson",
+			success:function(data){
+				arr = data;
+				$.each(arr, function(idx){
+					var dno = this.dno
+					var li = $("<li></li>").html(dno);
+					$(li).attr("idx",idx);
+					$(li).addClass("item");
+					$("#list").append(li);
+				})
+			}
+		});
+		
+		$(document).on("mouseenter",".item",function(){
+			$(this).addClass("hovered")
+		}).on("mouseleave",".item",function(){
+			$(this).removeClass("hovered");
+		})
+		
+		$(document).on("click",".item",function(){
+			$("#info").css("visibility","visible");
+			$(".item").removeClass("mclicked")
+			$(this).addClass("mclicked");
+			var idx = $(this).attr("idx");
+			var d = arr[idx];
+			$("#dno").html(d.dno);
+			$("#dname").html(d.dname);
+			$("#dloc").html(d.dloc);
+			
+			
+		})
+		
+		
+	});
+</script>
+</head>
+<body>
+	<ul id="list"></ul>
+	<div id="info">
+		부서번호: <span id="dno"></span><br>
+		부서명: <span id="dname"></span><br>
+		부서위치: <span id="dloc"></span>
+	
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.item{
+		list-style: none;
+	}
+	.hovered{
+		background-color: pink;
+	}
+	.mclicked{
+		background-color: skyblue;
+	}
+	
+	#box{
+		border: 2px black solid;
+		width: 200px; height: 200px;
+		padding: 20px;
+		display: inline-block;
+	}
+	#wrap{
+		display: inline-block;
+		width: 200px; height: 200px;
+		
+	}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+	$(function(){
+		$.ajax({
+			url:"listDeptJson",
+			success:function(r){
+				$.each(r, function(){
+					var dno = this.dno
+					var li = $("<li></li>").html(dno);
+					$(li).attr("dname",this.dname);
+					$(li).attr("dloc",this.dloc);
+					$(li).addClass("item");
+					$("#list").append(li);
+				})
+			}
+		});
+		
+		$(document).on("mouseenter",".item",function(){
+			$(this).addClass("hovered")
+		}).on("mouseleave",".item",function(){
+			$(this).removeClass("hovered");
+		})
+		
+		$(document).on("click","li",function(){
+			$("li").removeClass("mclicked")
+			$(this).addClass("mclicked");
+			var n = $(this).attr("dname");
+			var l = $(this).attr("dloc");
+			var nu = $(this).html();
+			$("#dno").val(nu);
+			$("#dname").val(n);
+			$("#dloc").val(l);
+			
+		})
+		
+		
+	});
+</script>
+</head>
+<body>
+	<div id="all">
+	<div id="wrap"><ul id="list"></ul></div>
+	<div id="box">
+		부서번호: <input type="text" id="dno"><br>
+		부서명: <input type="text" id="dname"><br>
+		부서위치: <input type="text" id="dloc">
+	
+	</div>
+	</div>
+</body>
+</html>
