@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+ <script>
+	 $(function(){
+		 $(document).on("click",".checkDelete",function(event){
+			 var re = confirm("진짜 삭제할까?")
+			 if(re==false){
+				 event.preventDefault();
+				
+			 }
+		 })
+	 });
+ </script>
+</head>
+<body>
+<h2>고객 목록</h2>
+<hr>
+<a href="/customer/insert">등록</a>
+<table border="1" width="80%">
+	<tr>
+		<th>고객번호</th>
+		<th>고객명</th>
+		<th>주소</th>
+		<th>전화번호</th>
+		<th>Action</th>
+	</tr>
+	<tr th:each="c:${list}">
+		<td th:text="${c.custid}"></td>
+		<td th:text="${c.name}"></td>
+		<td th:text="${c.addr}"></td>
+		<td th:text="${c.phone}"></td>
+		<td>
+			<a th:href="@{/customer/update(custid=${c.custid})}">수정</a>
+			<a th:class="checkDelete" th:href="@{/customer/delete(custid=${c.custid})}">삭제</a>
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>
