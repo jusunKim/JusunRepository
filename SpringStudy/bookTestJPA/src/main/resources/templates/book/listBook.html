@@ -7,10 +7,22 @@
 <body>
 	<h2>도서 목록</h2>
 	<hr>
+	<form action="listBook" method="get">
+	<select name="category" >
+		<option value="Bookid">도서번호</option>
+		<option value="Bookname">도서명</option>
+		<option value="Publisher">출판사</option>
+		<option value="Price">가격</option>
+	</select>
+	<input type="search" name="search"/>
+	<input type="submit" value="검색" />
+	</form>
 	<table border="1" width="80%">
 		<tr>
-			<th>도서번호</th>
-			<th>도서명</th>
+			<th><a href="listBook?ordering=Bookid">도서번호</a></th>
+			<th><a href="listBook?ordering=Bookname">도서명</a></th>
+			<th><a href="listBook?ordering=Price">가격</a></th>
+			<th><a href="listBook?ordering=Publisher">출판사</a></th>
 		</tr>
 		<tr th:each="b:${list}">
 			<td th:text="${b.bookid}"></td>
@@ -19,6 +31,8 @@
 					<span th:text="${b.bookname}"></span>
 				</a>
 			</td>
+			<td th:text="${b.price}"></td>
+			<td th:text="${b.publisher}"></td>
 		</tr>
 	</table>
 </body>

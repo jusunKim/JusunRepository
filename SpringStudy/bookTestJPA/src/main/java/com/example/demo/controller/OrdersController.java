@@ -11,6 +11,8 @@ import com.example.demo.service.CustomerService;
 import com.example.demo.service.OrdersService;
 import com.example.demo.vo.OrdersVO;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class OrdersController {
 
@@ -24,8 +26,9 @@ public class OrdersController {
 	private OrdersService os;
 	
 	@GetMapping("/orders/insert")
-	public void insertForm(Model model) {
-		model.addAttribute("bList",bs.findAll());
+	public void insertForm(HttpSession session,Model model) {
+//		model.addAttribute("bList",bs.findAll());
+		model.addAttribute("bList",bs.findAll(null));//findAll을 바꿔가지구..
 		model.addAttribute("cList",cs.listCust());
 		model.addAttribute("orderid",os.getNextNo());
 	}
@@ -38,7 +41,7 @@ public class OrdersController {
 	}
 	
 	@GetMapping("/orders/list")
-	public void list(Model model) {
-		model.addAttribute("list",os.findAll());
+	public void list(Model model, String search) {
+		model.addAttribute("list",os.findAll(search));
 	}
 }

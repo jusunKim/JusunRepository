@@ -1,5 +1,7 @@
 package com.example.demo.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,8 +23,10 @@ public interface OrdersDAO extends JpaRepository<OrdersVO, Integer> {
 	//오늘날짜를 넣어줘야돼가지구 직접 만드는중..
 	@Modifying
 	@Transactional 
-	@Query(value = "insert into orders o(o.orderid,o.custid,o.bookid,o.saleprice,o.orderdate) values(:#{#o.orderid},:#{#o.customer.custid},:#{#o.book.bookid},:#{#o.saleprice},sysdate)", nativeQuery = true)
+	@Query(value = "insert into orders(orderid,custid,bookid,saleprice,orderdate) values(:#{#o.orderid},:#{#o.customer.custid},:#{#o.book.bookid},:#{#o.saleprice},sysdate)", nativeQuery = true)
 	public void insert(@Param("o") OrdersVO o);
 	
+	public List<OrdersVO> findByCustomer_Name(String name);
 	
 }
+
