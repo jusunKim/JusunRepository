@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.Board;
@@ -22,13 +23,18 @@ public class BoardController {
 	@Autowired
 	private BoardService bs;
 	
+//	@GetMapping("/board/insert")
+//	public void insertForm(Model model, String pno) {
+//		int pp = 0;
+//		if(pno!=null) {
+//			pp = Integer.parseInt(pno);
+//		}
+//		model.addAttribute("no",pp);
+//	}
+	
 	@GetMapping("/board/insert")
-	public void insertForm(Model model, String pno) {
-		int pp = 0;
-		if(pno!=null) {
-			pp = Integer.parseInt(pno);
-		}
-		model.addAttribute("no",pp);
+	public void insertForm(Model model, @RequestParam(value="no", defaultValue="0") int no) {
+		model.addAttribute("no",no);
 	}
 	
 	@PostMapping("/board/insert")
