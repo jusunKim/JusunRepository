@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+
+
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -25,7 +27,8 @@ public class Member {
    private String name;
    private String role;
    
-
+   @OneToMany(mappedBy ="member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)//member라는 이름으로 참조하게 하겠다
+   private List<Board> boards;
 }
 
 

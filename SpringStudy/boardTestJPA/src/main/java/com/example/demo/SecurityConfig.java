@@ -30,7 +30,7 @@ public class SecurityConfig {
 		.anyRequest().authenticated();
 		
 		http.formLogin().loginPage("/member/login").permitAll()
-		.defaultSuccessUrl("/board/list/1");		
+		.defaultSuccessUrl("/board/list/1/null");		
 		
 		http.logout()
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

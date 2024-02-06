@@ -9,6 +9,7 @@
 	<th:block th:if="${session.loginUSER.role=='admin'}")>
 		<a href="/admin/index">관리자메뉴</a>
 	</th:block>
+	<a th:href="@{'/board/list/1/'+${session.loginUSER.id}}">내 글 보기</a>
 	<h2>게시물 목록</h2>
 	<hr />
 	<table border="1" width="80%">
@@ -27,7 +28,9 @@
 				</span>
 				<a th:href="@{'/board/detail/'+${b.no}}"  th:text="${b.title}"></a>
 			</td>
-			<td th:text="${b.id}"></td>
+			<td >
+				<a th:href="@{'/board/list/1/'+${b.member.id}}"  th:text="${b.member.id}"></a>
+			</td>
 			<td th:text="${b.regdate}"></td>
 		</tr>
 	</table>

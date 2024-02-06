@@ -13,7 +13,7 @@
 	제목: <span th:text="${b.title}"></span><br>
 	내용: <br><textarea th:text="${b.content}" cols="80" rows="10" readonly="readonly"></textarea><br>
 	조회수: <span th:text="${b.hit}"></span><br>
-	작성자: <span th:text="${b.id}"></span><br>
+	작성자: <span th:text="${b.member.id}"></span><br>
 	작성일: <span th:text="${b.regdate}"></span><br>
 	<div th:if="${b.fname!=null}">
 		<div th:if="${#strings.endsWith(b.fname,'.jpg')} or ${#strings.endsWith(b.fname,'.png')}">
@@ -24,5 +24,7 @@
 		</div>
 	</div>
 	<a th:href="@{/board/insert(no=${b.no})}">답글 달기</a>
+	<a th:href="@{'/board/update/'+${b.no}}">수정하기</a>
+	<a th:href="@{'/board/delete/'+${b.no}}">삭제하기</a>
 </body>
 </html>

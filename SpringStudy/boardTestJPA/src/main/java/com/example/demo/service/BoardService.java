@@ -38,4 +38,20 @@ public class BoardService {
 	public int getTotalRecord() {
 		return (int)dao.count();
 	}
+	
+	public int getTotalRecord(String id) {
+		return dao.countTotalRecord(id);
+	}
+	
+	public int update(Board b) {
+		return dao.update(b);
+	}
+	
+	public int delete(int no) {
+		return dao.deleteByNo(no);
+	}
+
+	public List<Board> findMyBoard(int start, int end, String id) {
+		return dao.findMyBoard(start, end, id);
+	}
 }
