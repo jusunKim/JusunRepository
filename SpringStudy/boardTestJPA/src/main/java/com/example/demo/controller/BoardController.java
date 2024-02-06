@@ -4,6 +4,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,15 +18,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.Board;
+import com.example.demo.entity.Member;
 import com.example.demo.service.BoardService;
+import com.example.demo.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class BoardController {
 
 	@Autowired
 	private BoardService bs;
+	
+	@Autowired
+	private MemberService ms;
 	
 //	@GetMapping("/board/insert")
 //	public void insertForm(Model model, String pno) {
@@ -87,14 +98,38 @@ public class BoardController {
 		return view;
 	}
 	
-	@GetMapping("/board/list")
-	public void list(Model model) {
-		model.addAttribute("list",bs.findAll());
+	//로그인 세션유지!!: 시큐리티 환경설정파일에서 로그인 성공 시 이동할 url인 이곳에서 상태유지해야댐
+	@GetMapping("/board/list/{page}")
+	public String list( HttpSession session ,Model model, @PathVariable int page) {
+		//1.로그아웃 전까지 상태유지를 위해 session을 매개변수로 추가함
+		
+		//2.시큐리티에서 로그인한 회원 정보 가져오려면 Authentication객체가 필요. 걜 가져오려면 SecurityContextHolder가필요
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		//3.Authentication객체를 통해 로그인한 객체를 가져옴
+		User user = (User)authentication.getPrincipal();
+		
+		//4.User를 통해 로그인한 회원의 아이디 가져옴
+		String id = user.getUsername();
+		
+		//5.세션유지하기
+		Member m = ms.findById(id);
+		session.setAttribute("loginUSER", m);
+		int totalRecord = bs.getTotalRecord();
+		int pageSize = 10;
+		int totalPage = (int)Math.ceil(totalRecord/(double)pageSize) ;
+		
+		int end = page*pageSize;
+		int start = end-pageSize+1;
+		model.addAttribute("totalPage",totalPage);
+		model.addAttribute("list",bs.findAll(start, end));
+		
+		return "/board/list";
 	}
 	
 	@GetMapping("/board/detail/{no}")
 	public String detail(Model model, @PathVariable int no) {
-		String view = "board/detail";
+		String view = "/board/detail";
 		model.addAttribute("b",bs.findByNo(no));
 		return view;
 	}

@@ -5,6 +5,10 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<div th:text="${session.loginUSER.id}+'('+${session.loginUSER.name}+')'+'님, 로그인하였습니다'"></div>
+	<th:block th:if="${session.loginUSER.role=='admin'}")>
+		<a href="/admin/index">관리자메뉴</a>
+	</th:block>
 	<h2>게시물 목록</h2>
 	<hr />
 	<table border="1" width="80%">
@@ -21,14 +25,16 @@
 					<span th:each="i:${#numbers.sequence(1,b.b_level)}">&nbsp;&nbsp;</span>
 					-->
 				</span>
-				<a th:href="@{'/board/detail/'+${b.no}}">
-					<span th:text="${b.title}"></span>
-				</a>
+				<a th:href="@{'/board/detail/'+${b.no}}"  th:text="${b.title}"></a>
 			</td>
 			<td th:text="${b.id}"></td>
 			<td th:text="${b.regdate}"></td>
 		</tr>
 	</table>
+	<th:block th:each="i:${#numbers.sequence(1,totalPage)}">
+		<a th:href="@{'/board/list/'+${i}}" th:text="${i}">&nbsp;</a>
+	</th:block>
+	<br>
 	<a href="/board/insert">게시물 등록</a>
 </body>
 </html>

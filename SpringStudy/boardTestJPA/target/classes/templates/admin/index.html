@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h2>고객 목록</h2>
+<hr />
+<table border="1" width="80%">
+	<tr>
+		<th>아이디</th>
+		<th>이름</th>
+		<th>레벨</th>
+		<th>action</th>
+	</tr>
+	<tr th:each="m:${list}">
+		<td th:text="${m.id}"></td>
+		<td th:text="${m.name}"></td>
+		<td th:text="${m.role}"></td>
+		<td ><a th:text="삭제" th:href="@{'/admin/delete/'+${m.id}}"></a></td>
+	</tr>
+</table>
+</body>
+</html>

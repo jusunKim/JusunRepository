@@ -26,6 +26,9 @@ public interface BoardDAO extends JpaRepository<Board,Integer> {
 	@Query(value="update board set b_step=b_step+1 where b_ref=?1 and b_step>?2", nativeQuery = true)
 	public int updateStep(int b_ref, int b_step);
 
-	@Query(value="select * from board order by b_ref desc, b_step", nativeQuery = true)
-	public List<Board> selectAll();
+//	@Query(value="select * from board order by b_ref desc, b_step", nativeQuery = true)
+	@Query(value="select b_level,b_ref,b_step,hit,no,regdate,content,fname,id,pwd,title from (select a.*, rownum n from (select * from board order by b_ref desc, b_step) a) where n between ?1 and ?2", nativeQuery = true)
+	public List<Board> selectAll(int start, int end);
+	
+
 }

@@ -22,9 +22,9 @@ public class BoardService {
 		return dao.getNextNo();
 	}
 	
-	public List<Board> findAll(){
+	public List<Board> findAll(int start, int end){
 //		return dao.findAll();
-		return dao.selectAll();
+		return dao.selectAll(start, end);
 	}
 	
 	public Board findByNo(int no) {
@@ -33,5 +33,9 @@ public class BoardService {
 	
 	public int updateStep(int b_ref, int b_step) {
 		return dao.updateStep(b_ref, b_step);
+	}
+	
+	public int getTotalRecord() {
+		return (int)dao.count();
 	}
 }
