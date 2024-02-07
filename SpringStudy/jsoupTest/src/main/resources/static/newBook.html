@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+   .page{
+      margin-right: 10px;
+      cursor: pointer;
+   }
+</style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+
+$(function(){
+   var arr;
+   var pageSIZE=10; //한 화면에 보여줄 레코드의 수
+   var pageGROUP=10;//한 화면에 보여줄 페이지의 수
+   var totalRecord;
+   var totalPage;
+   
+   $("#paging").on("click",".page", function(){
+      var pageNUM = eval($(this).attr("pageNUM"));
+      loadData(pageNUM);
+      printPage(pageNUM);
+   });
+   
+   function loadData(pageNUM){
+      $("#list").empty();
+      var start = (pageNUM-1)*pageSIZE;
+      var end = start+pageSIZE;
+      if(end > totalRecord-1){
+         end = totalRecord-1;
+      }
+      for(i = start; i<=end; i++){
+         var book = arr[i];
+         var title = book.title;
+         var link = book.link;
+         var a = $("<a></a>").html(title).attr("href",link);
+         var li = $("<li></li>");
+         $(li).append(a);
+         $("#list").append(li);
+      }
+      printPage(pageNUM);
+   }   
+   
+   function printPage(pageNUM){         
+      $("#paging").empty();         
+      var startPage = parseInt((pageNUM-1)/pageGROUP)*pageGROUP+1;     
+      var endPage = startPage + pageGROUP - 1;
+      
+      if(  startPage > 1  ){
+         var span = $("<span></span>").html("[이전]").addClass("page").attr("pageNUM", startPage-1 );
+         $("#paging").append(span);
+      }
+               
+      for(i=startPage; i<=endPage; i++){
+         var span = $("<span></span>").html(i).addClass("page").attr("pageNUM",i);
+         $("#paging").append(span);
+      }
+      
+      if(  endPage < totalPage  ){
+         var span = $("<span></span>").html("[다음]").addClass("page").attr("pageNUM", endPage+1 );
+         $("#paging").append(span);
+      }
+      
+   }   
+         
+   $.ajax({
+      url:"/newBook",
+      success:function(r){
+         arr = r;
+         totalRecord = arr.length;
+         totalPage = Math.ceil(totalRecord / pageSIZE);
+         console.log("totalRecord:"+totalRecord);
+         console.log("totalPage:"+totalPage);
+         
+         loadData(1);            
+      }
+   });
+   
+   $.ajax({
+	   url:"/seats",
+	   success:function(data){
+		   $("#seats").html(data);
+	   }
+   })
+});
+
+</script>
+</head>
+<body>
+   마포평생학습관 빈자리 수 : <span id="seats"></span>
+   <h2>새로운 도서정보</h2>
+   <hr />
+   <ul id="list"></ul>
+   <hr />
+   <div id="paging"></div>
+</body>
+</html>
