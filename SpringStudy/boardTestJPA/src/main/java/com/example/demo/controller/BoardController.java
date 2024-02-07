@@ -119,13 +119,11 @@ public class BoardController {
 		Member m = ms.findById(s_id);
 		session.setAttribute("loginUSER", m);
 		
-		
-		
 		int totalRecord = bs.getTotalRecord();
 		if(!id.equals("null")) {
 			totalRecord = bs.getTotalRecord(id);
 		}
-		int pageSize = 10;
+		int pageSize = 5;
 		int totalPage = (int)Math.ceil(totalRecord/(double)pageSize) ;
 		
 		int end = page*pageSize;
@@ -136,6 +134,7 @@ public class BoardController {
 		}else {
 			model.addAttribute("list",bs.findMyBoard(start, end, id));
 		}
+		model.addAttribute("id",id);
 		return "/board/list";
 	}
 	

@@ -27,6 +27,10 @@ public class BoardService {
 		return dao.selectAll(start, end);
 	}
 	
+	public List<Board> findMyBoard(int start, int end, String id) {
+		return dao.findMyBoard(start, end, id);
+	}
+
 	public Board findByNo(int no) {
 		return dao.getById(no);
 	}
@@ -51,7 +55,4 @@ public class BoardService {
 		return dao.deleteByNo(no);
 	}
 
-	public List<Board> findMyBoard(int start, int end, String id) {
-		return dao.findMyBoard(start, end, id);
-	}
 }

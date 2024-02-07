@@ -32,7 +32,8 @@ public interface BoardDAO extends JpaRepository<Board,Integer> {
 	
 	@Modifying
 	@Transactional
-	@Query(value="update board set title=:#{#b.title}, content=:#{#b.content}, fname=:#{#b.fname} where no=:#{#b.no}", nativeQuery = true)
+	@Query(value="update board set title=:#{#b.title}, content=:#{#b.content}, fname=:#{#b.fna"
+			+ "me} where no=:#{#b.no}", nativeQuery = true)
 	public int update(Board b);
 	
 	@Modifying
@@ -40,7 +41,7 @@ public interface BoardDAO extends JpaRepository<Board,Integer> {
 	@Query(value="delete board where no=?", nativeQuery = true)
 	public int deleteByNo(int no);
 	
-	@Query(value="select b_level,b_ref,b_step,hit,no,regdate,content,fname,id,pwd,title from (select a.*, rownum n from (select * from board order by b_ref desc, b_step) a) where n between ?1 and ?2 and id=?3", nativeQuery = true)
+	@Query(value="select b_level,b_ref,b_step,hit,no,regdate,content,fname,id,pwd,title from (select a.*, rownum n from (select * from board where id=?3 order by b_ref desc, b_step) a) where n between ?1 and ?2", nativeQuery = true)
 	public List<Board> findMyBoard(int start, int end, String id);
 	
 	@Query(value="select count(*) from board where id=?", nativeQuery = true)
