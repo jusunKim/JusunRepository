@@ -22,7 +22,6 @@ $(function(){
    $("#paging").on("click",".page", function(){
       var pageNUM = eval($(this).attr("pageNUM"));
       loadData(pageNUM);
-      printPage(pageNUM);
    });
    
    function loadData(pageNUM){
@@ -79,12 +78,16 @@ $(function(){
       }
    });
    
-   $.ajax({
-	   url:"/seats",
-	   success:function(data){
-		   $("#seats").html(data);
-	   }
-   })
+   setInterval(function(){
+	   $.ajax({
+		   url:"/seats",
+		   success:function(data){
+			   $("#seats").html(data);
+		   }
+	   })
+	   
+   },3000);
+   
 });
 
 </script>

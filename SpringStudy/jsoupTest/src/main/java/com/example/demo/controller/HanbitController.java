@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,17 +11,176 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DAO.BookDAO;
+import com.example.demo.entity.Book;
 import com.example.demo.entity.NewBook;
 
-@RestController
-public class HanbitController {
+import lombok.Setter;
 
+@RestController
+@Setter
+public class HanbitController {
+	
+	@Autowired
+	private BookDAO dao;
+	
+	@PostMapping("/search")
+	   public String search(String search) {
+		String base = "https://www.hanbit.co.kr";
+	      try {
+	         String url = "https://www.hanbit.co.kr/store/books/new_book_list.html?keyWord="+search+"&searchKey=p_title";
+	         Document doc = Jsoup.connect(url).get();         
+	         Elements elements = doc.select(".book_tit");
+	         for(Element e : elements) {
+	        	 Element a = e.firstElementChild();
+	            String title = a.text();
+	            String link = a.attr("href");
+	            String p_code = link.substring(link.indexOf("=")+1); 
+	            String url2 = base+link;
+	            
+	            //첫화면에 필요한 내용이 다 없어가지구 링크 가져와서 한 번 더 타고 들어가서 뽑아와야댐.
+	            Document doc2 = Jsoup.connect(url2).get();         
+		        Elements li = doc2.select(".info_list").get(0).getElementsByTag("li");
+		        String writer = li.get(0).getElementsByTag("span").get(0).text();
+		        String regdate = li.get(1).getElementsByTag("span").get(0).text();
+		        if( !Character.isDigit(regdate.charAt(0))) {
+		        	regdate = li.get(2).getElementsByTag("span").get(0).text();
+		        }
+		        int price = Integer.parseInt(doc2.select(".pbr").get(0).text().replace(",", "").replace("원", "")) ;
+		        
+		        		        
+		        System.out.println("도서코드:"+p_code);
+		        System.out.println("도서명:"+title);
+		        System.out.println("저자:"+writer);
+		        System.out.println("출간일:"+regdate);
+		        System.out.println("가격:"+price);
+		        Book b = new Book();
+		        b.setP_code(p_code);
+		        b.setTitle(title);
+		        b.setRegdate(regdate);
+		        b.setWriter(writer);
+		        b.setPrice(price);
+		        dao.save(b);
+		        System.out.println("------------------------------");
+	         }
+	      }catch (Exception e) {
+	         System.out.println("예외발생 : "+e.getMessage());
+	      }
+	      return "검색끗.";
+	   }
+	
+	public void imageDownload(String addr, String fname) {
+		fname = fname.replace(":", "_");
+		fname = fname.replace("/", "_");
+		fname = fname.replace("#", "_");
+		fname = fname.replace("?", "_");
+//		String base = "https://www.hanbit.co.kr";	
+		try {
+				URL url = new URL(addr);
+				InputStream is = url.openStream();
+				FileOutputStream fos = new FileOutputStream("c:/data/"+fname+".jpg");
+				FileCopyUtils.copy(is.readAllBytes(), fos);
+				is.close(); fos.close();
+				System.out.println(fname+"이미지다운로드함");
+			} catch (Exception e) {
+				System.out.println("예외발생"+e.getMessage());
+			}
+	}
+	
+	@GetMapping("/downAll")
+	   public String downAll() {
+	      try {         
+	            int page = 1;
+	            while(true) {
+	               String url = "https://www.hanbit.co.kr/store/books/new_book_list.html?page="+page;
+	               Document doc = Jsoup.connect(url).get();
+	               Elements elements = doc.select(".view_box");
+	               if(elements.size() == 0 ) { //elements.size() == 0 이면 즉, doc.select로 더이상 읽어들이는게 없으면 break하시오.
+	                  break;
+	               }
+	               for(Element e : elements) {
+	                  Elements img = e.getElementsByTag("img");
+	                  String src = img.get(img.size()-1).attr("src");
+	                  String title = e.select(".book_tit").get(0).getElementsByTag("a").get(0).text();
+	                  imageDownload("https://www.hanbit.co.kr/"+src, title);
+	            }      
+	               System.out.println(page+"페이지를 다운로드하였습니다.");
+	               page++;
+	         }
+	      }catch (Exception e) {
+	         System.out.println("예외발생 : "+e.getMessage());
+	      }
+	      return "OK";
+	   }
+
+	
+	@GetMapping("/downImage")
+	public String downImage() {
+		ArrayList<String> addrs = new ArrayList<String>();
+		ArrayList<String> fnames = new ArrayList<String>();
+		
+		try {
+			int i = 1;
+			while(true) {
+				String newUrl = "https://www.hanbit.co.kr/store/books/new_book_list.html?page="+i;
+				Document doc = Jsoup.connect(newUrl).get();
+				Elements listBookname = doc.select(".book_tit");
+				Elements listImage = doc.select(".thumb");
+				for (Element p:listBookname) {
+					Element a = p.firstElementChild(); 
+					String bookname = a.text();
+					bookname = bookname.replace(":", "_");
+					bookname = bookname.replace("/", "_");
+					bookname = bookname.replace("#", "_");
+					fnames.add(bookname);
+				}
+				for(Element img:listImage) {
+					String imglink = img.attr("src");
+					addrs.add(imglink);
+				}
+				if(listBookname.size()==0) {
+					break;
+				}
+				i++;
+			}
+		} catch (Exception e) {
+			System.out.println("가져오는거예외발생:"+e.getMessage());
+		}
+		
+		for(int i=0; i<addrs.size(); i++) {
+			imageDownload(addrs.get(i), fnames.get(i));
+		} 
+		
+		return "OK";
+	}
+	
+	/*
+	@GetMapping("/downImage")
+	public String downImage() {
+		String addr = "https://www.hanbit.co.kr/data/books/B7027415255_l.jpg";
+		try {
+			URL url = new URL(addr);
+			String fname = "퀵드로잉.jpg";
+			InputStream is = url.openStream();
+			FileOutputStream fos = new FileOutputStream("c:/data/"+fname);
+			FileCopyUtils.copy(is.readAllBytes(), fos);
+			is.close(); fos.close();
+			System.out.println("이미지를 다운로드했습니다.");
+		} catch (Exception e) {
+			System.out.println("downImage 예외발생:"+e.getMessage());
+		}
+		return "OK";
+	}*/
+	
 	@GetMapping("/seats")
 	public String seat() {
 		String r = "";
