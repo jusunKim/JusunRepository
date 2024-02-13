@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+  <script>
+	  $(function(){
+		$("#btn_pay").click(function(){
+			IMP.init("imp83651754");
+			IMP.request_pay({
+				pg:'kcp',
+				pay_method:'card',
+				merchant_uid:'merchant_'+new Date().getTime(),
+				name:'스타킹',
+				amount:200,
+				buyer_email:'jusun627@naver.com',
+				buyer_name:'김주선',
+				buyer_tel:'010-2697-4569',
+				buyer_addr:'서울시 마포구 서교동',
+				buyer_postcode:'123-456'
+			},function(rsp){
+				if(rsp.success){
+					console.log("결제완료");
+					console.log("결제번호:"+rsp.imp_uid);
+					console.log("주문번호:"+rsp.merchant_uid);
+					console.log("결제 금액:"+rsp.paid_amount);
+					console.log("카드 승인번회"+rsp.apply_num);
+					
+					
+					$("#imp_uid").val(rsp.imp_uid);
+					$("#merchant_uid").val(rsp.merchant_uid);
+					$("#paid_amount").val(rsp.paid_amount);
+					$("#apply_num").val(rsp.apply_num);
+					$("#pay").submit();
+				}else{
+					console.log("결제 실패");
+					console.log("에러ㅣ"+res.error_msg);
+				}	
+			});
+		});
+	});
+  </script>
+</head>
+<body>
+	<button id="btn_pay">결제</button>
+	<form action="/payok" method="post" id="pay">
+		<input type="hidden" name="imp_uid" id="imp_uid"/>
+		<input type="hidden" name="merchant_uid" id="merchant_uid"/>
+		<input type="hidden" name="paid_amount" id="paid_amount"/>
+		<input type="hidden" name="apply_num" id="apply_num"/>
+	</form>
+</body>
+</html>
