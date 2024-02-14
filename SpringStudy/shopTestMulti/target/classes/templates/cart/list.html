@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+ <script>
+	 $(function(){
+		 $("#btn_order").click(function(){
+			 location.href="/orders/checkout";
+		
+		 })
+	 })
+ </script>
+</head>
+<body>
+	<h2>내장바구니.</h2>
+	<hr />
+	<table border="1">
+		<tr>
+			<th>장바구니번호</th>
+			<th>상품</th>
+			<th>수량</th>
+		</tr>
+		<tr th:each="c:${list}">
+			<td th:text="${c.no}"></td>
+			<td th:text="${c.gno}"></td>
+			<td th:text="${c.qty}"></td>
+		</tr>
+	</table>
+	<button id="btn_order">주문하기</button>
+</body>
+</html>

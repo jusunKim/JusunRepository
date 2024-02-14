@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+ <script>
+	  $(function(){
+		  
+		$("#btn_pay").click(function(){
+			var name = $("#name").html();
+			var email = $("#email").html();
+			var addr = $("#addr").html();
+			var tel = $("#tel").html();
+			var item = $("#item").html();
+			var price= $("#price").html();
+			//var no= $("#no").html();
+			var postcode= $("#postcode").html();
+			var id= $("#id").html();
+			
+			var data = { 
+				pg:'kcp', //pg
+				pay_method:'card', //결제수단
+				merchant_uid:"sist_"+new Date().getTime(), //매번 다른 게 붙어야 매번 다른 상품임을 표시하게됨..
+				name: item, //상품명
+				amount:price, //상품가격
+				buyer_email:email, //결제자이메일
+				buyer_name:name, //결제자이름
+				buyer_tel:tel, //결제자전화번호
+				buyer_addr:addr, //결제자주소
+				buyer_postcode:postcode //결제자 우편번호
+			}
+			
+			IMP.init("imp83651754"); //사이트에서 받아온 가맹점식별코드
+			IMP.request_pay(data ,function(res){ //**requestpay()는 매개변수 두개. 1)보내는정보(객체), 2)콜백함수
+				if(res.success){
+					data.imp_uid = res.imp_uid;/*data안에 새로운 속성 넣는 법*/
+					data.apply_num = res.apply_num;
+					data.buyer_id = id;
+					delete data.pg; /*data객체 안에 필요 없는 속성 없애는 법*/
+					$.ajax({
+						url:"/goods/payment",
+						data:data,
+						success:function(){
+							location.href="/goods/paymentOK.html";
+						}
+					})
+
+				}else{
+					console.log(res.error_msg);
+					//location.href="/goods/paymentError.html";
+				}	
+			});
+		});
+	});
+  </script>
+
+</head>
+<body>
+	<h2>상품 주문</h2>
+	<hr />
+	<!--오늘은 form으로 해서 보내는 거 말고 ajax통신으로 보내볼거라네요-->
+	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>		
+	<span id="id" th:text="${session.loginUSER.id}" style="display: none"/><br />
+	이름: <span id="name" th:text="${session.loginUSER.name}"/><br />
+	전화: <span id="tel" th:text="${session.loginUSER.tel}"/><br />
+	이메일: <span id="email" th:text="${session.loginUSER.email}"/><br />
+	주소: <span id="addr" th:text="${session.loginUSER.addr}"/><br />
+	우편번호: <span id="postcode" th:text="${session.loginUSER.postcode}"/><br />
+	<hr />
+		<table >
+		<tr>
+			<th>상품</th>
+			<th>수량</th>
+		</tr>
+		<tr th:each="c:${list}">
+			<td th:text="${c.gno}"></td>
+			<td th:text="${c.qty}"></td>
+		</tr>
+	</table>
+	<span id="item" th:text="${name}"></span><br />
+	총 주문 금액: <b><span id="price" th:text="${total}"></span></b>
+	<button id="btn_pay">결제</button>
+
+</body>
+</html>

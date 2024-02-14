@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2>상품 목록~</h2>
+	<hr />
+	<th:block th:if="${session.loginUSER.role=='admin'}">
+		<a href="/goods/insert">상품 등록</a><br />		
+	</th:block>
+	<a href="/cart/list">장바구니</a><br />
+	<table border="1" width="80%">
+	<tr>
+		<th>상품번호</th>
+		<th>상품명</th>
+		<th>가격</th>
+	</tr>
+	<tr th:each="g:${list}">
+		<td th:text="${g.no}"></td>
+		<td ><a th:href="@{'/goods/detail/'+${g.no}}" th:text="${g.item}"></a></td>
+		<td th:text="${g.price}"></td>
+	</tr>
+	
+</table>
+</body>
+</html>
