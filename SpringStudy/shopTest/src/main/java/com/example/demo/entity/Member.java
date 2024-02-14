@@ -27,6 +27,7 @@ public class Member {
 	private String tel;
 	private String addr;
 	private String role;
+	private String postcode;
 	
 	
 }

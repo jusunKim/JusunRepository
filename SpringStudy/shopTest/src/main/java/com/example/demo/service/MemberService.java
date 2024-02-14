@@ -51,6 +51,10 @@ public class MemberService implements UserDetailsService {
 		return user;
 	}
 
+	public Member findById(String s_id) {
+		return memberDAO.findById(s_id).get();
+	}
+
 }
 
 

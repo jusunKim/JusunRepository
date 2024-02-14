@@ -15,5 +15,7 @@
 	상품수량: <span  th:text="${g.qty}"/><br />
 	파일 : <img th:src="@{'/images/'+${g.fname}}" width="50" height="50" />
 
+<hr />
+<a th:href="@{'/goods/orders/'+${g.no}}">주문하기</a>
 </body>
 </html>
