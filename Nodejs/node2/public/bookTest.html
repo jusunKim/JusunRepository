@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .line:hover{
+            background-color: aqua;
+            cursor: pointer;
+        }
+        .imclicked{
+            background-color: chocolate;
+        }
+    </style>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        $(function(){
+            function listBook(){
+                $("#list").empty();
+                $.ajax("/listBook",{
+                    success:function(r){
+                        $.each(r,function(){
+                            var tr = $("<tr></tr>").addClass("line").attr("bookid",this.BOOKID);
+                            var td1 = $("<td></td>").html(this.BOOKID);
+                            var td2 = $("<td></td>").html(this.BOOKNAME);
+                            var td3 = $("<td></td>").html(this.PRICE);
+                            var td4 = $("<td></td>").html(this.PUBLISHER);
+                            tr.append(td1,td2,td3,td4);
+                            $("#list").append(tr);
+                        })
+                    }
+                })
+
+            }
+            listBook();   
+
+            $("#btnAdd").click(()=>{
+                var data = $("#f").serializeArray();
+               /* $.ajax({url:"",data:, function(){ }}) 써도됨*/
+                $.post("/insertBook", data, ()=>{
+                    listBook();
+                });
+            })
+
+            $(document).on("click",".line",function(){
+                $(".line").removeClass("imclicked");
+                $(this).addClass("imclicked");
+                var td_list = $(this).find("td");
+                var input_list = $("input");
+                $.each(td_list, function(i){
+                    $(input_list[i]).val($(this).html())
+                })
+            });
+
+            $("#btnUpdate").click(()=>{
+                var data = $("#f").serializeArray();
+               /* $.ajax({url:"",data:, function(){ }}) 써도됨*/
+                $.post("/updateBook", data, ()=>{
+                    listBook();
+                });
+            });
+
+            $("#btnDelete").click(()=>{
+                var data = $("#f").serializeArray();
+                $.post("/deleteBook", data, ()=>{
+                    listBook();
+                });
+            })
+
+    
+        })
+    </script>
+</head>
+<body>
+    <h2>도서목록</h2>
+    <form id="f">
+        <input type="hidden" id="bookid" name="bookid">
+        도서명: <input type="text" id="bookname" name="bookname"><br>
+        가격: <input type="text" id="price" name="price"><br>
+        출판사: <input type="text" id="publisher" name="publisher"><br>
+    </form>
+    <button id="btnAdd">등록</button>
+    <button id="btnUpdate">수정</button>
+    <button id="btnDelete">삭제</button>
+    <hr>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>도서번호</th>
+                <th>도서명</th>
+                <th>가격</th>
+                <th>출판사</th>
+            </tr>
+        </thead>
+        <tbody  id="list"></tbody>
+    </table>
+</body>
+</html>
