@@ -56,6 +56,7 @@ app.post("/updateBook",function(req,res){
     var bookname = req.body.bookname;
     var price = parseInt(req.body.price);
     var publisher = req.body.publisher;
+    
     console.log(bookid+" "+bookname+" "+price+" "+publisher);
     async function run(){
         try{
@@ -81,5 +82,5 @@ app.post("/updateBook",function(req,res){
 
 // 매개변수 192.168.0.111의 위치를 비워두면 기본값(localhost 또는 127.0.0.1)으로 설정되고, 비워두지 않고, ip주소를 채워넣으면 해당 ip주소로 접속이 가능한 것입니다.
 http.createServer(app).listen(52273,"192.168.0.51",function(){
-    console.log("서버가 가동되었습니다. http://192.168.0.111:52237");
+    console.log("서버가 가동되었습니다. http://192.168.0.51:52273");
 });
