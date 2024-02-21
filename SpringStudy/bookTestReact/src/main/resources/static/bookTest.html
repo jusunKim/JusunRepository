@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@^16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16.13.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        var isInit = false;
+        var selRow;
+
+
+        class Form extends React.Component{ 
+        
+            initialState = {
+                bookid:'1',
+                bookname: '',
+                price: '',
+                publisher: '',
+                }
+            state = this.initialState
+            
+            selectBook = (book)=>{
+                this.setState(book);
+            }
+
+            submitForm =(event)=>{ //버튼이 여러 개니까 어떤 이벤트인지 알아야 해서 눌린 버튼에 대한 정보를 가져오려고 event.target을 쓰는거
+                const url = event.target.getAttribute("url") //이벤트 발생의 주체 event.target으로부터 getAttribute을 써서 url속성값을 가져옴. ex) /insertBook
+                console.log(url);
+                var data = this.state;
+                const axiosConfig = {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                }
+                axios.post(url,data,axiosConfig); //axios로 ajax통신하기
+                location.reload() //다시 읽어줘
+                return false;
+            }
+
+            handleChange=(event)=>{
+                if(isInit){
+                    this.setState(selRow);
+                    isInit=false;
+                }
+                
+                const {name,value} =event.target; //여기서 event.target은 이벤트가 발생한 상자
+                this.setState({//입력한 걸 입력상자 안에다가 반영을 해야지 . 상태값을 바꾸는 게 setState
+                    [name]:value //name에다가 내가 넣은 value값으로 넣어줘
+                })
+                
+            }
+            
+
+            render() {
+                const {bookid, bookname, price, publisher } = this.state; //이 안에서 쓰는 변수는 render()함수 안에서 정의가 돼야 한대
+                return (
+                    <form>
+                    <input type="hidden" name="bookid" id="bookid" value={bookid} /><br/>
+                    <label htmlFor="bookname">도서명</label>
+                    <input type="text" name="bookname" id="bookname" value={bookname} onChange={this.handleChange}/><br/>
+                    <label htmlFor="price">가격</label>
+                    <input type="text"  name="price" id="price" value={price} onChange={this.handleChange} /><br/>
+                    <label htmlFor="publisher">출판사</label>
+                    <input type="text"  name="publisher" id="publisher" value={publisher} onChange={this.handleChange}/><br/>
+                    <input type="button" url="/insertBook" value="등록" onClick={this.submitForm}/> 
+                    <input type="button" url="/updateBook" value="수정" onClick={this.submitForm}/> 
+                    <input type="button" url="/deleteBook" value="삭제" onClick={this.submitForm}/> 
+                    </form>
+                );
+            }
+        }
+
+
+        const TableHeader = ()=>{
+            return <thead>
+                        <tr>
+                            <th>도서번호</th>
+                            <th>도서명</th>
+                            <th>가격</th>
+                            <th>출판사</th>
+                        </tr>
+                    </thead>
+        }
+
+     
+        const TableBody = (props)=>{
+            
+            props.sel=(book)=>{
+                selRow = book; isInit=true;
+                formComponent.selectBook(book);
+            }
+
+            const rows = props.listData.map((book)=>{ 
+                return <tr key={book.bookid} onClick={()=>props.sel(book)}>
+                        <td>{book.bookid}</td>
+                        <td>{book.bookname}</td>
+                        <td>{book.price}</td>
+                        <td>{book.publisher}</td>
+                    </tr>
+                    
+            }); //props안에 listData만큼 map함수 돌면서..어쩌구
+            return <tbody>{rows}</tbody> //싹 다 한 거를 반환
+        }
+
+        //헤더랑 바디를 포함하고 있는 Table태그
+        const Table = (props)=>{
+            const listData = props.listData; //tableBody에 listData전달해주려고
+            return <table>
+                    <TableHeader/>
+                    <TableBody listData={listData}/> 
+                </table>
+        }
+
+        let formComponent;  //외부에서 Form을 갖다쓰려고 만든 변수
+
+        //axios통해서 ajax통신 하기
+        //형식: axios.get("서비스명").then(함수)
+        axios.get("/listBook").then((res)=>{ //응답이 오는 걸 확인하고 
+            class App extends React.Component{
+                render(){
+                    const list = res.data; //응답한 도서목록.. 객체의 배열
+                    return <div>
+                            <Form ref={(form)=>{formComponent=form}}/>
+                            <Table listData={list}/>
+                        </div>
+                }
+            }
+            ReactDOM.render(<App/>,document.getElementById("root"));
+        })
+    </script>
+</body>
+</html>
