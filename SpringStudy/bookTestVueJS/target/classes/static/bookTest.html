@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+	<div id="inputBox">
+		<input type="hidden" v-model="b.bookid"/>
+		도서명: <input type="text" v-model="b.bookname"/><br />
+		가격 : <input type="text" v-model="b.price"/><br />
+		출판사: <input type="text" v-model="b.publisher"/><br />
+		<button v-on:click="submitBook('insertBook')">등록</button>
+		<button v-on:click="submitBook('updateBook')">수정</button>
+		<button v-on:click="submitBook('deleteBook')">삭제</button>
+	</div>
+	<hr />
+	<table border="1" id="table1">
+			<tr>
+				<th>도서번호</th>
+				<th>도서명</th>
+				<th>가격</th>
+				<th>출판사</th>
+			</tr>
+			<tr v-for="row in rows" v-on:click="selectBook(row)">
+				<td>{{row.bookid}}</td>
+				<td>{{row.bookname}}</td>
+				<td>{{row.price}}</td>
+				<td>{{row.publisher}}</td>
+			</tr>
+		</table>
+	
+	<script>
+		const axiosConfig = {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }
+
+	
+		axios.get("/listBook").then(function(res){
+			var tableVue = new Vue({
+				el:"#table1",
+				data:{
+					rows:res.data
+				},
+				methods:{
+					selectBook:function(row){
+						inputVue.b =row
+					}	
+				}
+			});
+		});
+		
+		
+
+		var inputVue = new Vue({
+			el:"#inputBox",
+			data:{
+				b:{bookid:1,bookname:"", price:"", publisher:""}
+			},
+			methods:{
+				submitBook:function(url){
+					axios.post("/"+url,this.b,axiosConfig).then(function(){
+							location.reload();
+					})
+				}
+				
+			}
+		});
+		
+	
+		
+	</script>
+</body>
+</html>

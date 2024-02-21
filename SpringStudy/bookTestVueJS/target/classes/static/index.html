@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+	<h2>도서관리시스템.</h2>
+	<hr />
+	<div id="box">
+		{{msg}}
+	</div>
+	
+	<div id="box2">
+		<span v-bind:title="name">
+			hello
+		</span>
+	</div>
+	<div id="box3">
+		<span v-if="seen">
+			Now you see me
+		</span>
+	</div>
+	
+	<div id="box4">
+		<ol>
+			<li v-for="todo in todos">{{todo.text}}</li>
+		</ol>
+	</div>
+	
+	<div>
+		<table border="1" id="table1">
+			<tr>
+				<th>도서번호</th>
+				<th>도서명</th>
+				<th>가격</th>
+				<th>출판사</th>
+			</tr>
+			<tr v-for="row in rows">
+				<td>{{row.bookid}}</td>
+				<td>{{row.bookname}}</td>
+				<td>{{row.price}}</td>
+				<td>{{row.publisher}}</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="box5">
+		<p>{{msg}}</p>
+		<button v-on:click="pro">거꾸로뒤집긲</button>
+	</div>
+	
+	
+	<div id="box6">
+		<p >{{name}}</p>
+		<input type="text" v-model="name" />
+	</div>
+	
+	<script>
+		
+		var vuebox6 = new Vue({
+			el:"#box6",
+			data:{
+				name:"홍길동"
+			}
+		})
+		
+		var vuebox5 = new Vue({
+			el:"#box5",
+			data:{
+				msg:"hello"
+			},
+			methods:{pro:function(){
+				this.msg= this.msg.split("").reverse().join("");
+				//split("")하나하나나누기, reverse()뒤집기, join("")하나하나갖다붙이기
+			}}
+		})
+		
+		var vuebox4 = new Vue({
+			el:"#box4",
+			data:{
+				todos:[
+					{text:"자바스크립트"},
+					{text:"Vue.js"},
+					{text:"스프링부트"},
+				]
+			}
+		})
+		
+		var trow = new Vue({
+			el:"#table1",
+			data:{
+				rows:[
+					{bookid:1, bookname:"축구의 역사", price:7000, publisher:"굿스포츠"},
+					{bookid:2, bookname:"축구아는 여자", price:13000, publisher:"나무수"},
+					{bookid:3, bookname:"축구의 이해", price:22000, publisher:"대한미디어"}
+				]
+			}
+		});
+		
+		var vuebox = new Vue({ //뷰를 만들거야. 
+			el:"#box", //얘를 어디에 적용할 건데? 그 대상 element
+			data:{ //상태유지할 거
+				msg:"Hello Vue!"
+			} 
+		}); 
+		
+		var vuebox2 = new Vue({
+			el:"#box2",
+			data:{
+				name:"안녕홍길동"+new Date().toLocaleString()
+			}
+		});
+		
+		var vuebox3 = new Vue({
+			el:"#box3",
+			data:{
+				seen:false
+			}
+		});
+		
+		
+	</script>
+	
+</body>
+</html>
