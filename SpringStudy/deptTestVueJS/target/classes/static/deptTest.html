@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h2>부서 목록</h2>
+<hr />
+
+<div id="deptForm">
+	부서번호: <input type="text" v-model="d.dno"/><br />
+	부서명: <input type="text" v-model="d.dname"/><br />
+	부서위치: <input type="text" v-model="d.dloc"/><br />
+	<input type="file" v-on:change="handleFileChange"/><br />
+	<button v-on:click="callAjax('insertDept')">등록</button>
+</div>
+<hr />
+
+
+<table border="1" id="deptTable">
+	<tr>
+		<th>부서번호</th>
+		<th>부서명</th>
+		<th>위치</th>
+		<th>파일?</th>
+	</tr>
+	 <tr v-for="d in list">
+		 <td>{{d.dno}}</td>
+		 <td>{{d.dname}}</td>
+		 <td>{{d.dloc}}</td>
+		 <td>{{d.fname}}</td>
+	 </tr>
+	 
+</table>
+<script>
+	var deptForm = new Vue({
+		el:"#deptForm",
+		data:{d:{dno:"", dname:"", dloc:"", uploadFile:null}},
+		methods:{
+			handleFileChange:function(event){
+				this.d.uploadFile = event.target.files[0]; //event.target하면 inputtype="file"인 걔고 거기서 선택한 애가 files[0]
+			},
+			callAjax:function(url){
+				//어젠 걍 d를 띨롱 보내면 됐는데, ajax통신으로 파일 업로드를 하려면 formData에 담아서 보내야한다! d는 걍 json이잖어...
+				let formData = new FormData();
+				formData.append("dno",this.d.dno);
+				formData.append("dname",this.d.dname);
+				formData.append("dloc",this.d.dloc);
+				formData.append("uploadFile",this.d.uploadFile);
+				
+				axios.post(url,formData,axiosConfig).then(function(){
+					location.reload();
+				});
+			}
+		}
+	})
+	
+	const axiosConfig = {
+            headers: {
+                "Content-Type": "multipart/form-data" //파일 업로드 하려면 얘로 바꿔줘야됨!!
+            }
+        }
+
+	
+	axios.get("/listDept").then(function(res){
+		var deptTable = new Vue({
+			el:"#deptTable",
+			data:{
+				list:res.data
+			}
+		})
+		
+	})
+</script>
+</body>
+</html>
