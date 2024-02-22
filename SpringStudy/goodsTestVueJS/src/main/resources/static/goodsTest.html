@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h2>상품 목록</h2>
+<hr />
+
+<div id="goodsForm">
+	<input type="hidden" v-model="g.no"/><br />
+	<input type="hidden" v-model="g.fname"/><br />
+	상품명: <input type="text" v-model="g.name"/><br />
+	가격: <input type="text" v-model="g.price"/><br />
+	수량: <input type="text" v-model="g.qty"/><br />
+	<img v-if="g.fname" :src="'./images/' + g.fname" width="100" height="100"/><br />
+	첨부파일: <input type="file" v-on:change="handleFileChange"/><br />
+	<button v-on:click="callAjax('/insert')">등록</button>
+	<button v-on:click="callAjax('/update')">수정</button>
+	<button v-on:click="callAjax('/delete')">삭제</button>
+</div>
+<hr />
+
+
+<table border="1" id="goodsTable">
+	<tr>
+		<th>상품번호</th>
+		<th>상품명</th>
+		<th>가격</th>
+		<th>수량</th>
+		<th>파일</th>
+	</tr>
+	 <tr v-for="g in list" v-on:click="selectGoods(g)">
+		 <td>{{g.no}}</td>
+		 <td>{{g.name}}</td>
+		 <td>{{g.price}}</td>
+		 <td>{{g.qty}}</td>
+		 <td>{{g.fname}}</td>
+	 </tr>
+	 
+</table>
+<script>
+	const axiosConfig = {  headers: {
+            "Content-Type": "multipart/form-data" //파일 업로드 하려면 얘로 바꿔줘야됨!!
+        }
+   }
+   
+	var goodsForm = new Vue({
+		el:"#goodsForm",
+		data:{ g:{no:2, name:"", price:"", qty:"", uploadFile:null, fname:""}},
+		methods:{
+			handleFileChange:function(event){
+				this.g.uploadFile = event.target.files[0];
+			},
+			callAjax:function(url){
+				let formData = new FormData();
+				formData.append("no",this.g.no);
+				formData.append("name",this.g.name);
+				formData.append("price",this.g.price);
+				formData.append("qty",this.g.qty);
+				formData.append("uploadFile",this.g.uploadFile);
+				formData.append("fname",this.g.fname);
+				axios.post(url,formData,axiosConfig).then(function(){
+					location.reload();
+				})
+			}
+			
+		}
+	})
+	
+	
+	axios.get("/listGoods").then(function(res){
+		var goodsTable = new Vue({
+			el:"#goodsTable",
+			data: {list:res.data},
+			methods:{
+				selectGoods:function(row){
+					goodsForm.g=row
+				}
+			}
+		})
+	})
+	
+	
+</script>
+</body>
+</html>
