@@ -1,0 +1,5 @@
+f = open("./Data/hello.txt","w",encoding="UTF-8")
+f.write("hello\n")
+f.write("파이썬\n")
+f.close()
+print("파일 생성했습니다.")
