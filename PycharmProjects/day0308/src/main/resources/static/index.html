@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+ <script>
+	 $(function(){
+		 $('#btn_list').click(function(){
+			 $.ajax({
+				 url:"http://127.0.0.1:5000/listMember",
+				 dataType:'jsonp',
+				 jsonpCallback:'pro',
+				 success:function(r){
+					 console.log(r)
+				 }
+			 })
+		 })
+	 })
+ </script>
+</head>
+<body>
+	<h2>spring flask 연동하기</h2>
+	<hr />
+	<button id="btn_list">Flask서버의 데이터 갖고 오기</button>
+</body>
+</html>
