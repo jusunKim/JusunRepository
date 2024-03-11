@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+ <script>
+	 $(function(){
+		 
+			 $.ajax({
+				 url:'http://127.0.0.1:5000/gettitanic',
+				 dataType:"jsonp",
+				 jsonpCallback:"pro",
+				 success:function(re){
+					 alert(re);
+				 }
+			 })
+		 
+	 })
+ </script>
+</head>
+<body>
+ 
+</body>
+</html>

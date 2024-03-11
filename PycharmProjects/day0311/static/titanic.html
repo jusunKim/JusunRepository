@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+ <script>
+	 $(function(){
+		 $('#f').submit(function(e){
+			 e.preventDefault();
+			 var data = $('#f').serializeArray();
+			 $.ajax({
+				 url:'http://127.0.0.1:5000/gettitanic',
+				 dataType:"jsonp",
+				 jsonpCallback:"pro",
+				 data:data,
+				 success:function(re){
+					 console.log(re)
+					 $('#result').html(re[0]+"");
+				 }
+			 })
+		 })
+	 })
+ </script>
+</head>
+<body>
+  <h3>타이타닉 생존 여부 예측</h3>
+    <hr>
+    <form id='f'>
+	    객실 등급(1-3): <input type="text" name="pclass"><br>
+	    성별(male/female):<input type="text" name="sex"><br>
+	    나이:<input type="text" name="age"><br>
+	    동승한 형제, 자매, 배우자 수:<input type="text" name="sibsp"><br>
+	    동승한 부모, 자녀 수:<input type="text" name="parch"><br>
+	    요금:<input type="text" name="fare"><br>
+	    승선 부두(Q/S/C):<input type="text" name="embarked"><br>
+	    who(man/woman/child): <input type="text" name="who"><br>
+	    <input type="submit" value="예측하기">
+	    <input type="reset" value="다시 입력">
+    </form>
+    <hr>
+    생존 여부: <span id = "result"></span>
+</body>
+</html>
