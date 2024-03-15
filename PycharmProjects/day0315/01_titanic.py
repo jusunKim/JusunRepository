@@ -1,4 +1,4 @@
-# <<데이터 로딩>>
+# <<데이터 로딩>>     
 # 우선 라이브러리를 불러옵니다.
 import pandas as pd
 import numpy as np
