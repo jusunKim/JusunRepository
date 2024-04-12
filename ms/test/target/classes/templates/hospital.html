@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	 <h2>Hospital List</h2>
+	 <form action="/hospital" method="get">
+		 <input type="search" name="search"/>
+		 <input type="submit" value="검색"/>
+	 </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>병원 이름</th>
+                <th>전화번호</th>
+                <th>주소</th>
+                <th>동물병원맞는지확인용</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="hospital : ${list}">
+                <td th:text="${hospital.fclty_NM}"></td>
+                <td th:text="${'0'+hospital.tel_NO}"></td>
+                <td th:text="${hospital.rdnmadr_NM}"></td>
+                <td th:text="${hospital.ctgry_THREE_NM}"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- 페이징 -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+			<ul>
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a  th:href="@{'/hospital?page=' + ${i}}"><span th:text="${i + 1}"></span></a>
+            </li>
+            </ul>
+        </ul>
+    </nav>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
